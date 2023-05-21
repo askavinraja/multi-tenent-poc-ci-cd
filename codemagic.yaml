@@ -9,78 +9,18 @@ definitions:
       name: Get assets from AWS S3 bucket
       script: |
         echo "Client ID: ${CLIENT_ID}"
-        aws s3 cp s3://$S3_BUCKET_NAME/assets_${CLIENT_ID}.zip assets.zip
+        curl -L "https://crm.instalytix.io/media/assets_003.zip" > "assets.zip";
         unzip assets.zip -d $CLIENT_ASSETS_FOLDER
 
 
 # Builds will be triggered via Codemagic's REST API with the $CLIENT_ID variable and the WL_CLIENT_ID environment group in the payload
-workflows:
-  ios-client-release:
-    name: iOS client release
-    instance_type: mac_mini_m1
-    labels:
-      - ${CLIENT_ID} # Helpful when you open your Codemagic's builds page  
-    environment:
-      groups:
-        - aws_credentials # Includes (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION)
-      vars:
-        <<: *env_vars
-        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
-        XCODE_SCHEME: "Runner"
-        BASE_BUNDLE_ID: io.codemagic.whitelabel.dev # <-- Put the bundle ID that exists in the code, it will be replaced with the client's.
-    scripts:
-      - *get_assets #Getting client assets from S3 bucket
-      - name: Set bundle id # Replace the base bundle Id with the client's
-        script: |
-          PBXPROJ=$CM_BUILD_DIR/ios/Runner.xcodeproj/project.pbxproj
-          sed -i.bak "s/\$BASE_BUNDLE_ID/$BUNDLE_ID/g" $PBXPROJ
-      - name: Change iOS icons
-        script: |
-          rm -rf ios/Runner/Assets.xcassets/AppIcon.appiconset
-          cp -r ./$CLIENT_ASSETS_FOLDER/$IOS_ASSETS_FOLDER ios/Runner/Assets.xcassets/
-      - name: Set main image # An image that being used in this sample project
-        script: cp -r ./$CLIENT_ASSETS_FOLDER/hero.png assets/hero.png
-      - name: Set client id
-        script: cp -r ./$CLIENT_ASSETS_FOLDER/client.env assets/client.env
-      - name: Install pods
-        script: find . -name "Podfile" -execdir pod install \;
-      - name: iOS code signing
-        script: |
-          keychain initialize
-          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
-          keychain add-certificates
-          xcode-project use-profiles
-      - name: Install dependencies
-        script: flutter packages pub get      
-      - name: Flutter build ipa and automatic versioning
-        script: |
-          BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
-          flutter build ipa --release \
-          --build-name=1.0.$BUILD_NUMBER \
-          --build-number=$BUILD_NUMBER\
-          --export-options-plist=/Users/builder/export_options.plist
-    artifacts: 
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log    
-      - test-results/flutter.json
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
-    publishing:      
-      app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-      email: 
-        recipients:
-          - name@mail.com
-  
+workflows:  
   android-client-release:
     name: Android client release
-    instance_type: mac_mini_m1
+    instance_type: linux_x2
     labels:
       - ${CLIENT_ID} # Helpful when you open your Codemagic's builds page 
     environment:
-      groups:
-        - aws_credentials # Includes (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION)
       vars:
         <<: *env_vars
     scripts:
@@ -95,24 +35,14 @@ workflows:
         script: cp -r ./$CLIENT_ASSETS_FOLDER/hero.png assets/hero.png
       - name: Set client id
         script: cp -r ./$CLIENT_ASSETS_FOLDER/client.env assets/client.env
-      - name: Set up keystore
-        script: echo $CM_KEYSTORE | base64 --decode > $CM_KEYSTORE_PATH
       - name: Install dependencies
         script: flutter packages pub get
       - name: Flutter build aab and automatic versioning
         script: |
-          BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
-          flutter build appbundle --release \
+          BUILD_NUMBER=5
+          flutter build apk --release \
           --build-name=1.0.$BUILD_NUMBER \
           --build-number=$BUILD_NUMBER
     artifacts: 
-      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/*.a
       - test-results/flutter.json
-    publishing:
-      google_play:
-        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        track: internal 
-        submit_as_draft: true
-      email: 
-        recipients:
-          - name@mail.com
