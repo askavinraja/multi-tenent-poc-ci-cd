@@ -21,6 +21,8 @@ workflows:
     labels:
       - ${CLIENT_ID} # Helpful when you open your Codemagic's builds page 
     environment:
+      groups:
+        - "client-006"
       vars:
         <<: *env_vars
     scripts:
