@@ -44,5 +44,5 @@ workflows:
         script: |
           flutter build apk
     artifacts: 
-      - build/**/outputs/**/*.a
+      - build/**/outputs/**/*.apk
       - test-results/flutter.json
