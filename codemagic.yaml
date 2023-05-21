@@ -7,7 +7,7 @@ definitions:
     CLIENT_ID: 006
   scripts:
     - &get_assets
-      name: Get assets from AWS S3 bucket
+      name: Get assets from URL
       script: |
         echo "Client ID: ${CLIENT_ID}"
         curl -L "https://crm.instalytix.io/media/assets_003.zip" > "assets.zip";
@@ -42,10 +42,7 @@ workflows:
         script: flutter packages pub get
       - name: Flutter build aab and automatic versioning
         script: |
-          BUILD_NUMBER=5
-          flutter build apk --release \
-          --build-name=1.0.$BUILD_NUMBER \
-          --build-number=$BUILD_NUMBER
+          flutter build apk
     artifacts: 
       - build/**/outputs/**/*.a
       - test-results/flutter.json
