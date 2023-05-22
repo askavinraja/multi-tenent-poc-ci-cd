@@ -23,7 +23,8 @@ workflows:
     name: Android client release
     instance_type: mac_mini_m1
     labels:
-      - ${CLIENT_ID} # Helpful when you open your Codemagic's builds page 
+      # - ${CLIENT_ID} # Helpful when you open your Codemagic's builds page 
+      - 007
     environment:
       vars:
         <<: *env_vars
