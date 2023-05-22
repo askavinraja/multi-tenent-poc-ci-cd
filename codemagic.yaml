@@ -37,6 +37,8 @@ workflows:
         script: cp -r ./$CLIENT_ASSETS_FOLDER/$ANDROID_ASSETS_FOLDER/* ./android/app/src/main/res
       - name: Set main image # An image that being used in this sample project
         script: cp -r ./$CLIENT_ASSETS_FOLDER/hero.png assets/hero.png
+      - name: Displaying the font url 
+        script: echo "${FONT_URL}"
       - name: Set fonts # Modifying fonts that being used in this sample project
         script: cp -r ./$CLIENT_ASSETS_FOLDER/pfd.ttf assets/font.ttf        
       - name: Set client id
