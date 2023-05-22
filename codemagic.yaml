@@ -4,13 +4,16 @@ definitions:
     CLIENT_ASSETS_FOLDER: client_assets # The name of unzipped folder on the build machine that have the client assets.
     ANDROID_ASSETS_FOLDER: android_assets # The name of your folder in S3 bucket that have the client's Android assets from (/android/app/src/main/res/).
     IOS_ASSETS_FOLDER: ios_assets # The name of your folder in S3 bucket that have the client's iOS assets from (/ios/Runner/Assets.xcassets/).
-    CLIENT_ID: 006
+    # CLIENT_ID: 006
+
   scripts:
     - &get_assets
-      name: Get assets from URL
+      name: Get assets from URL 
       script: |
         echo "Client ID: ${CLIENT_ID}"
-        curl -L "https://crm.instalytix.io/media/assets_003.zip" > "assets.zip";
+        echo "DOWNLOAD URL ${DOWNLOAD_URL}"
+
+        curl -L "${DOWNLOAD_URL}" > "assets.zip";
         unzip assets.zip -d $CLIENT_ASSETS_FOLDER
 
 
@@ -22,8 +25,6 @@ workflows:
     labels:
       - ${CLIENT_ID} # Helpful when you open your Codemagic's builds page 
     environment:
-      groups:
-        - "client-006"
       vars:
         <<: *env_vars
     scripts:
@@ -36,6 +37,8 @@ workflows:
         script: cp -r ./$CLIENT_ASSETS_FOLDER/$ANDROID_ASSETS_FOLDER/* ./android/app/src/main/res
       - name: Set main image # An image that being used in this sample project
         script: cp -r ./$CLIENT_ASSETS_FOLDER/hero.png assets/hero.png
+      - name: Set fonts # Modifying fonts that being used in this sample project
+        script: cp -r ./$CLIENT_ASSETS_FOLDER/pfd.ttf assets/font.ttf        
       - name: Set client id
         script: cp -r ./$CLIENT_ASSETS_FOLDER/client.env assets/client.env
       - name: Install dependencies
