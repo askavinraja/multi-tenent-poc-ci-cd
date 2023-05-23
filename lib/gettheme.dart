@@ -1,8 +1,11 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'themes.dart';
 
+var fontName = "Font";
+
 AppTheme getTheme() {
   final client = dotenv.get('CLIENT', fallback: 'dev');
+  final fontname = dotenv.get('FONT', fallback: 'Montserrat');
   var theme = themeDev;
 
   switch (client) {

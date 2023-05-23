@@ -51,6 +51,10 @@ class Home extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 15.0),
                 ),
+                Text(
+  'FONT NAME ${dotenv.get('FONT', fallback: 'Montserrat')}',
+  style: TextStyle(fontFamily: fontFamilyName),
+)
               ],
             ),
           ),

@@ -47,7 +47,10 @@ workflows:
       - name: Set fonts # Modifying fonts that being used in this sample project
         script: cp -r ./$CLIENT_ASSETS_FOLDER/pfd.ttf assets/font.ttf        
       - name: Set client id
-        script: cp -r ./$CLIENT_ASSETS_FOLDER/client.env assets/client.env
+        script: |
+          cp -r ./$CLIENT_ASSETS_FOLDER/client.env assets/client.env
+          echo ${FONT_NAME} is adding to the env
+          echo FONT=${FONT_NAME} >> assets/client.env
       - name: Install dependencies
         script: flutter packages pub get
       - name: Flutter build aab and automatic versioning
