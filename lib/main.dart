@@ -52,7 +52,7 @@ class Home extends StatelessWidget {
                   style: TextStyle(fontSize: 15.0),
                 ),
                 Text(
-  'FONT NAME ${dotenv.get('FONT', fallback: 'Montserrat')}',
+  'FONT NAME ${dotenv.get('FONT_NAME', fallback: 'Montserrat')}\nGLOBAL VAR ${fontName}',
   
 ),
  Text(

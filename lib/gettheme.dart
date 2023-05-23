@@ -5,7 +5,8 @@ var fontName = "Font";
 
 AppTheme getTheme() {
   final client = dotenv.get('CLIENT', fallback: 'dev');
-  final fontname = dotenv.get('FONT', fallback: 'Montserrat');
+  final fontname = dotenv.get('FONT_NAME', fallback: 'Montserrat');
+  fontName = fontname;
   var theme = themeDev;
 
   switch (client) {
