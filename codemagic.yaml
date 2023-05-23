@@ -23,8 +23,8 @@ workflows:
     name: Android client release
     instance_type: mac_mini_m1
     labels:
-      # - ${CLIENT_ID} # Helpful when you open your Codemagic's builds page 
-      - 007
+      - ${CLIENT_ID} # Helpful when you open your Codemagic's builds page 
+      # - 007
     environment:
       vars:
         <<: *env_vars
@@ -34,6 +34,10 @@ workflows:
         script: |
           flutter pub add change_app_package_name
           flutter pub run change_app_package_name:main $PACKAGE_NAME
+      - name: Set App name
+        script: |
+          flutter pub global activate rename
+          flutter pub global run rename --appname $APP_NAME --target android
       - name: Change Android icons
         script: cp -r ./$CLIENT_ASSETS_FOLDER/$ANDROID_ASSETS_FOLDER/* ./android/app/src/main/res
       - name: Set main image # An image that being used in this sample project
