@@ -51,6 +51,7 @@ workflows:
           cp -r ./$CLIENT_ASSETS_FOLDER/client.env assets/client.env
           # echo ${FONT_NAME} ${FONT_URL} is adding to the env
           echo FONT_NAME="${FONT_NAME}" >> assets/client.env
+          # font name and url is not setting properly without ""
           echo FONT_URL="${FONT_URL}" >> assets/client.env
           echo ---ENV FILE CONTENTS---
           cat assets/client.env
