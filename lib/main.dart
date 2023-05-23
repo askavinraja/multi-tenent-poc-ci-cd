@@ -53,7 +53,7 @@ class Home extends StatelessWidget {
                 ),
                 Text(
   'FONT NAME ${dotenv.get('FONT', fallback: 'Montserrat')}',
-  style: TextStyle(fontFamily: fontFamilyName),
+  
 )
               ],
             ),
