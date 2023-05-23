@@ -49,10 +49,12 @@ workflows:
       - name: Set client id
         script: |
           cp -r ./$CLIENT_ASSETS_FOLDER/client.env assets/client.env
-          echo ${FONT_NAME} ${FONT_URL} is adding to the env
+          # echo ${FONT_NAME} ${FONT_URL} is adding to the env
           echo FONT_NAME=${FONT_NAME} >> assets/client.env
           echo FONT_URL=${FONT_URL} >> assets/client.env
+          echo ---ENV FILE CONTENTS---
           cat assets/client.env
+          echo ---ENV FILE CONTENT END---
       - name: Install dependencies
         script: flutter packages pub get
       - name: Flutter build aab and automatic versioning
