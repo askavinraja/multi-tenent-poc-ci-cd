@@ -54,11 +54,11 @@ class Home extends StatelessWidget {
                 Text(
   'FONT NAME ${dotenv.get('FONT', fallback: 'Montserrat')}',
   
-)
+),
  Text(
   'FONT URL ${dotenv.get('FONT_URL', fallback: 'Montserrat')}',
   
-)
+),
               ],
             ),
           ),
