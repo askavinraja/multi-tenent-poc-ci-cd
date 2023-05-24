@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import 'themes.dart';
-import 'package:global_configuration/global_configuration.dart';
+// import 'package:global_configuration/global_configuration.dart';
 import 'package:whitelabel/stringtohex.dart';
 import 'gettheme.dart';
 
@@ -11,8 +11,8 @@ String? themeStr;
 
 Future main() async {
   // themeStr = await rootBundle.loadString('assets/config/red.json');
-  await GlobalConfiguration().loadFromUrl(
-      "https://raw.githubusercontent.com/askavinraja/multi-tenent-poc-ci-cd/master/assets/config/cfg.json");
+  // await GlobalConfiguration().loadFromUrl(
+  //     "https://raw.githubusercontent.com/askavinraja/multi-tenent-poc-ci-cd/master/assets/config/cfg.json");
   await dotenv.load(fileName: "assets/client.env");
   runApp(Home());
 }
@@ -60,11 +60,12 @@ class Home extends StatelessWidget {
                   style: TextStyle(fontSize: 15.0),
                 ),
                 Text(
-                  getConfig('appName')! + "\nColor ${getConfig("brandColor")}",
+                  getConfig('appName') ??
+                      "" + "\nColor ${getConfig("brandColor")}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 15.0,
-                      color: convertToColor(getConfig("brandColor")!)),
+                      color: convertToColor(getConfig("brandColor") ?? "000")),
                 ),
                 Text(
                   'FONT NAME ${dotenv.get('FONT_NAME', fallback: 'Montserrat')}\nGLOBAL VAR ${fontName}',
