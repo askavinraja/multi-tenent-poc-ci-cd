@@ -1,0 +1,107 @@
+---
+format_version: '11'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: flutter
+trigger_map:
+- push_branch: "*"
+  workflow: primary
+- pull_request_source_branch: "*"
+  workflow: primary
+workflows:
+  deploy:
+    description: |
+      Builds and deploys app using [Deploy to bitrise.io Step](https://devcenter.bitrise.io/en/getting-started/getting-started-with-flutter-apps.html#deploying-a-flutter-app).
+
+      If you build for iOS, make sure to set up code signing secrets on Bitrise for a successful build.
+
+      Next steps:
+      - Check out [Getting started with Flutter apps](https://devcenter.bitrise.io/en/getting-started/getting-started-with-flutter-apps.html) for signing and deployment options.
+      - Check out the [Code signing guide](https://devcenter.bitrise.io/en/code-signing.html) for iOS and Android
+    steps:
+    - git-clone@8: {}
+    - certificate-and-profile-installer@1: {}
+    - flutter-installer@0:
+        inputs:
+        - is_update: 'false'
+    - flutter-analyze@0:
+        inputs:
+        - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
+    - flutter-build@0:
+        inputs:
+        - project_location: "$BITRISE_FLUTTER_PROJECT_LOCATION"
+        - platform: both
+        - ios_output_type: archive
+    - deploy-to-bitrise-io@2: {}
+  download-assets:
+    description: Download
+  primary:
+    description: |
+      Builds project and runs tests.
+
+      Next steps:
+      - Check out [Getting started with Flutter apps](https://devcenter.bitrise.io/en/getting-started/getting-started-with-flutter-apps.html).
+    steps:
+    - git-clone@8: {}
+    - flutter-installer@0: {}
+    - restore-dart-cache@1: {}
+    - save-dart-cache@1: {}
+    - script@1:
+        inputs:
+        - is_debug: 'yes'
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fails
+            echo "Script is running"
+            echo "ENV VAR ${PACKAGE_NAME}"
+            echo "Running flutter pub add change_app_package_name & flutter pub run change_app_package_name:main $PACKAGE_NAME"
+            flutter pub add change_app_package_name
+            flutter pub run change_app_package_name:main ${PACKAGE_NAME}
+            echo "completed running"
+    - script@1:
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            # fail if any commands fail
+            echo "downloading assets"
+            echo "Client ID: ${CLIENT_ID}"
+            echo "DOWNLOAD URL ${DOWNLOAD_URL}"
+            curl -L "${DOWNLOAD_URL}" > "assets.zip";
+            unzip assets.zip -d client_assets
+            echo "moving assets to main res folder"
+            cp -r ./client_assets/android_assets/* ./android/app/src/main/res
+            echo "android icon done now main in-app logo"
+            cp -r ./client_assets/hero.png assets/hero.png
+            cp -r ./client_assets/client.env assets/client.env
+            # echo ${FONT_NAME} ${FONT_URL} is adding to the env
+            # echo FONT_NAME="${FONT_NAME}" >> assets/client.env
+            echo FONT_NAME="\"${FONT_NAME}"\" | cat >> assets/client.env
+            # font name and url is not setting properly without ""
+            echo FONT_URL="\"${DOWNLOAD_URL}"\" | cat >> assets/client.env
+            echo ---ENV FILE CONTENTS---
+            cat assets/client.env
+            echo ---ENV FILE CONTENT END---
+    - flutter-build@0:
+        inputs:
+        - platform: android
+    - deploy-to-bitrise-io@2: {}
+meta:
+  bitrise.io:
+    stack: osx-xcode-14.2.x-ventura
+    machine_type_id: g2-m1.4core
+app:
+  envs:
+  - opts:
+      is_expand: false
+    BITRISE_FLUTTER_PROJECT_LOCATION: "."
+  - opts:
+      is_expand: false
+    PACKAGE_NAME: com.trs.rly.edit
+  - opts:
+      is_expand: false
+    FONT_NAME: PlayFair
+  - opts:
+      is_expand: false
+    DOWNLOAD_URL: https://github.com/askavinraja/multi-tenent-poc-ci-cd/raw/master/assets_008.zip
+  - opts:
+      is_expand: false
+    CLIENT_ID: '009'
