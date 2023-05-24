@@ -13,6 +13,7 @@ extension ColorExtension on String {
   }
 }
 
-convertToColor(String colorHex) {
-  return colorHex.toColor();
+Color convertToColor(String colorHex) {
+  if (colorHex.length < 6) colorHex = colorHex + "000";
+  return ("#" + colorHex).toColor();
 }

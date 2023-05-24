@@ -11,8 +11,8 @@ String? themeStr;
 
 Future main() async {
   // themeStr = await rootBundle.loadString('assets/config/red.json');
-  await GlobalConfiguration()
-      .loadFromMap({"appName": "RUN-Loyal", "brandColor": "fff"});
+  await GlobalConfiguration().loadFromUrl(
+      "https://raw.githubusercontent.com/askavinraja/multi-tenent-poc-ci-cd/master/assets/config/cfg.json");
   await dotenv.load(fileName: "assets/client.env");
   runApp(Home());
 }
@@ -60,13 +60,11 @@ class Home extends StatelessWidget {
                   style: TextStyle(fontSize: 15.0),
                 ),
                 Text(
-                  GlobalConfiguration().getString('appName') +
-                      "Color ${GlobalConfiguration().getString("brandColor")}",
+                  getConfig('appName')! + "\nColor ${getConfig("brandColor")}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 15.0,
-                      color: convertToColor(
-                          GlobalConfiguration().getString("brandColor"))),
+                      color: convertToColor(getConfig("brandColor")!)),
                 ),
                 Text(
                   'FONT NAME ${dotenv.get('FONT_NAME', fallback: 'Montserrat')}\nGLOBAL VAR ${fontName}',
