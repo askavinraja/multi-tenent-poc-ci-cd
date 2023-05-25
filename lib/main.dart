@@ -12,13 +12,14 @@ String? themeStr;
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: "assets/client.env");
   // themeStr = await rootBundle.loadString('assets/config/red.json');
-  Fluttertoast.showToast(msg: "CONFIG INIT FROM URL");
+  Fluttertoast.showToast(
+      msg: "CONFIG INIT FROM URL ${dotenv.get("CONFIG_URL")}");
   await GlobalConfiguration().loadFromUrl(
-      "https://raw.githubusercontent.com/askavinraja/multi-tenent-poc-ci-cd/master/assets/cfg/cfg.json");
+      "https://raw.githubusercontent.com/askavinraja/multi-tenent-poc-ci-cd/master/assets/config/app.json");
   // await GlobalConfiguration().loadFromAsset("cfg.json");
   Fluttertoast.showToast(msg: "CFG ${GlobalConfiguration().get("appName")}");
-  await dotenv.load(fileName: "assets/client.env");
   runApp(Home());
 }
 
@@ -71,9 +72,9 @@ class Home extends StatelessWidget {
                       fontSize: 15.0,
                       color: convertToColor(getConfig("brandColor") ?? "000")),
                 ),
-                Text(
-                  'FONT NAME ${dotenv.get('FONT_NAME', fallback: 'Montserrat')}\nGLOBAL VAR ${fontName}',
-                ),
+                // Text(
+                //   'FONT NAME ${dotenv.get('FONT_NAME', fallback: 'Montserrat')}\nGLOBAL VAR ${fontName}',
+                // ),
                 Text(
                   'FONT URL ${dotenv.get('FONT_URL', fallback: 'Montserrat')}',
                 ),
