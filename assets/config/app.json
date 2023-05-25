@@ -1,3 +1,6 @@
 {"appName": "RUN-Ly", "brandColor": "F78F00",
-"fontName":"Playfair", "fontUrl":"fontUrl"
+"fontName":"Playfair", "fontUrl":"fontUrl",
+ "client_id":"002",
+ "tagline":"your tenent tagline",
+ "additionalInfo": "Font and Any Resource related to the tenent also can be added"
 }
