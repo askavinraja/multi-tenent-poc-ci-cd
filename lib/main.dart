@@ -37,21 +37,22 @@ class Home extends StatelessWidget {
           fontFamily: theme.fontFamily,
           brightness: Brightness.dark),
       // theme: theme,
-      title: 'Development',
+      title: '${getConfig('appName')!}',
       home: Scaffold(
         appBar: theme.kShowAppBar
-            ? AppBar(title: Text(theme.kStatusBarHeader))
+            ? AppBar(title: Text("${getConfig('appName')!}"))
             : null,
         body: Center(
           child: Container(
-            decoration: theme.kGradientStyle,
+            // decoration: theme.kGradientStyle,
+            color: convertToColor(getConfig("brandColor") ?? "000"),
             // child: Text(AppConfig.of(context).buildFlavor),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Text(
-                  theme.kMainHeader,
+                  "${getConfig('appName')!}",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
                 ),
@@ -61,7 +62,15 @@ class Home extends StatelessWidget {
                   height: 180.0,
                 ),
                 Text(
-                  theme.kSubHeader,
+                  "${getConfig('tagline') ?? ""}",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 15.0),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "${getConfig('additionalInfo') ?? ""}",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 15.0),
                 ),
