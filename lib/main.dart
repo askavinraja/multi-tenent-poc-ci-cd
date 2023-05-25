@@ -13,9 +13,10 @@ String? themeStr;
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // themeStr = await rootBundle.loadString('assets/config/red.json');
-  // await GlobalConfiguration().loadFromUrl(
-  // "https://raw.githubusercontent.com/askavinraja/multi-tenent-poc-ci-cd/master/assets/config/cfg.json");
-  await GlobalConfiguration().loadFromAsset("cfg.json");
+  Fluttertoast.showToast(msg: "CONFIG INIT FROM URL");
+  await GlobalConfiguration().loadFromUrl(
+      "https://raw.githubusercontent.com/askavinraja/multi-tenent-poc-ci-cd/master/assets/cfg/cfg.json");
+  // await GlobalConfiguration().loadFromAsset("cfg.json");
   Fluttertoast.showToast(msg: "CFG ${GlobalConfiguration().get("appName")}");
   await dotenv.load(fileName: "assets/client.env");
   runApp(Home());
