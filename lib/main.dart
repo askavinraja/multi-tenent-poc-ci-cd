@@ -76,7 +76,7 @@ class Home extends StatelessWidget {
                 //   'FONT NAME ${dotenv.get('FONT_NAME', fallback: 'Montserrat')}\nGLOBAL VAR ${fontName}',
                 // ),
                 Text(
-                  'FONT URL ${dotenv.get('FONT_URL', fallback: 'Montserrat')}',
+                  'FONT URL ${dotenv.get('CONFIG_URL', fallback: 'Montserrat')}',
                 ),
               ],
             ),
