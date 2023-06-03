@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 // import 'themes.dart';
 import 'package:global_configuration/global_configuration.dart';
 import 'package:whitelabel/stringtohex.dart';
@@ -14,12 +14,12 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "assets/client.env");
   // themeStr = await rootBundle.loadString('assets/config/red.json');
-  Fluttertoast.showToast(
-      msg: "CONFIG INIT FROM URL ${dotenv.get("CONFIG_URL")}");
+  // Fluttertoast.showToast(
+  //     msg: "CONFIG INIT FROM URL ${dotenv.get("CONFIG_URL")}");
   await GlobalConfiguration().loadFromUrl(
       "https://raw.githubusercontent.com/askavinraja/multi-tenent-poc-ci-cd/master/assets/config/app.json");
   // await GlobalConfiguration().loadFromAsset("cfg.json");
-  Fluttertoast.showToast(msg: "CFG ${GlobalConfiguration().get("appName")}");
+  // Fluttertoast.showToast(msg: "CFG ${GlobalConfiguration().get("appName")}");
   runApp(Home());
 }
 

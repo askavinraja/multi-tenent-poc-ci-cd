@@ -24,7 +24,7 @@ class AppTheme {
 
 // Dev theme
 final themeDev = AppTheme(
-    kMainHeader: "Codemagic Dev",
+    kMainHeader: "TRS Dev",
     kShowAppBar: true,
     kStatusBarHeader: "Development",
     kSubHeader: "This is the Dev build",
@@ -44,7 +44,7 @@ final themeDev = AppTheme(
 
 // QA theme
 final themeQA = AppTheme(
-    kMainHeader: "Codemagic QA",
+    kMainHeader: "TRS QA",
     kShowAppBar: true,
     kStatusBarHeader: "QA",
     kSubHeader: "This is the QA build",
