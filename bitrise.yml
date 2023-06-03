@@ -7,6 +7,8 @@ trigger_map:
   workflow: primary
 - pull_request_source_branch: "*"
   workflow: primary
+- tag: "*"
+  workflow: deploy
 workflows:
   deploy:
     description: |
@@ -56,7 +58,12 @@ workflows:
             echo "Running flutter pub add change_app_package_name & flutter pub run change_app_package_name:main $PACKAGE_NAME"
             flutter pub add change_app_package_name
             flutter pub run change_app_package_name:main ${PACKAGE_NAME}
-            echo "completed running"
+            echo "completed changing package name"
+            echo "App name Rename initiated $APP_NAME"
+            flutter pub global activate rename
+            flutter pub global run rename --appname $APP_NAME --target android
+            echo "App name changed to $APP_NAME"
+        title: Package Name & App Name Change
     - script@1:
         inputs:
         - content: |-
@@ -72,17 +79,30 @@ workflows:
             echo "android icon done now main in-app logo"
             cp -r ./client_assets/hero.png assets/hero.png
             cp -r ./client_assets/client.env assets/client.env
-            # echo ${FONT_NAME} ${FONT_URL} is adding to the env
-            # echo FONT_NAME="${FONT_NAME}" >> assets/client.env
-            echo FONT_NAME="\"${FONT_NAME}"\" | cat >> assets/client.env
-            # font name and url is not setting properly without ""
-            echo FONT_URL="\"${DOWNLOAD_URL}"\" | cat >> assets/client.env
+            echo "" | cat >> assets/client.env
+            echo CONFIG_URL="\"${CONFIG_URL}"\" | cat >> assets/client.env
             echo ---ENV FILE CONTENTS---
             cat assets/client.env
             echo ---ENV FILE CONTENT END---
+        title: Download Assets & Load Logo, ENV
+    - manage-ios-code-signing@1:
+        inputs:
+        - distribution_method: app-store
     - flutter-build@0:
         inputs:
         - platform: android
+    - xcode-archive@4:
+        run_if: ".IsCI"
+        inputs:
+        - distribution_method: app-store
+    - deploy-to-itunesconnect-deliver@2:
+        inputs:
+        - team_id: E8Q47GVS49
+        - team_name: E8Q47GVS49
+        - fastlane_version: latest
+        - bundle_id: com.ihomeconcierge.gatewayhome
+        - app_id: '1446583027'
+        - verbose_log: 'yes'
     - deploy-to-bitrise-io@2: {}
 meta:
   bitrise.io:
@@ -105,3 +125,15 @@ app:
   - opts:
       is_expand: false
     CLIENT_ID: '009'
+  - opts:
+      is_expand: false
+    APP_NAME: Run-Ly
+  - opts:
+      is_expand: false
+    CONFIG_URL: https://raw.githubusercontent.com/askavinraja/multi-tenent-poc-ci-cd/master/assets/config/app.json
+  - opts:
+      is_expand: false
+    BITRISE_PROJECT_PATH: "./ios/Runner.xcworkspace"
+  - opts:
+      is_expand: false
+    BITRISE_SCHEME: Runner
