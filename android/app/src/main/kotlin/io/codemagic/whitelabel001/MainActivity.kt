@@ -1,4 +1,4 @@
-package io.codemagic.whitelabel001
+package com.thereciprocalsolutions.haalo
 
 import io.flutter.embedding.android.FlutterActivity
 
