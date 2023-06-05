@@ -70,7 +70,8 @@ android {
         release {
          keyAlias System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
          keyPassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
-         storeFile file("key.jks")
+        //  storeFile file("key.jks")
+         storeFile file(System.getenv("HOME") + "/keystores/key.jks")
          storePassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
        }
     }    
