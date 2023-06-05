@@ -1,4 +1,4 @@
-package com.thereciprocalsolutions.haalo
+package com.thereciprocalsolutions.fleto
 
 import io.flutter.embedding.android.FlutterActivity
 
